@@ -4,7 +4,7 @@
 
 {
 
-  networking.hostName = "LD-NixOS-PC"; # Define your hostname.
+  networking.hostName = "SDV-NixOS-PC"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   
   # Set your time zone.
@@ -24,7 +24,7 @@
   # };
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -36,26 +36,38 @@
   };
 
 
-  # necessary for VPN
+  # WireGuard VPN
   networking.iproute2.enable = true;
-  services.mullvad-vpn.enable = true;
-
-  # printing setup
-  
-  ## Enable CUPS to print documents.
-  services.printing.enable = true;
-  services.printing.drivers = [ pkgs.cups-brother-hll2350dw ];
-
-  ## IPP auto discovery
-  services.avahi = {
-    enable = true;
-    publish = {
-      enable = true;
-      userServices = true;
-    };
-    nssmdns4 = true;
-    openFirewall = true;
+  networking.firewall.checkReversePath = "loose"; # needed for WireGuard
+  networking.wg-quick.interfaces = {
+    # Configure your WireGuard tunnel here, e.g.:
+    # wg0 = {
+    #   address = [ "10.0.0.2/24" ];
+    #   privateKeyFile = "/etc/wireguard/private.key";
+    #   peers = [{
+    #     publicKey = "PEER_PUBLIC_KEY";
+    #     endpoint = "vpn.example.com:51820";
+    #     allowedIPs = [ "0.0.0.0/0" ];
+    #   }];
+    # };
   };
+
+  # printing setup (uncomment when you have a printer)
+
+  # ## Enable CUPS to print documents.
+  # services.printing.enable = true;
+  # services.printing.drivers = [ pkgs.cups-brother-hll2350dw ];
+
+  # ## IPP auto discovery
+  # services.avahi = {
+  #   enable = true;
+  #   publish = {
+  #     enable = true;
+  #     userServices = true;
+  #   };
+  #   nssmdns4 = true;
+  #   openFirewall = true;
+  # };
 
   services.sunshine = {
     enable = true;
@@ -138,25 +150,13 @@
       hashicorp.hcl
     ];
   })
-  (texliveMedium.withPackages (
-    ps: with ps;
-    [
-      ling-macros
-      tree-dvips
-      moderncv
-      geometry
-      fontawesome5
-    ]
-  ))
   ollama-cuda
   claude-code
   llama-cpp
   streamrip
-  alsa-scarlett-gui
-  scarlett2
   v4l-utils
-  cameractrls-gtk4 
-  monero-gui
+  cameractrls-gtk4
+  spotify
   krita
   gimp
   shotcut
@@ -169,11 +169,25 @@
   zip
   unzip
   r2modman
+  oversteer # Logitech racing wheel configuration
+  wireguard-tools
+  alsa-utils # MIDI routing (aconnect)
+  qjackctl # visual MIDI/audio routing
+  wineasio # ASIO support for Wine
 
   # sunshine
   ];
 
-  # mouse DPI setings
+  # Flatpak support
+  services.flatpak.enable = true;
+
+  # Logitech device support (Solaar - supports LIGHTSPEED/Unifying/Bolt receivers)
+  hardware.logitech.wireless = {
+    enable = true;
+    enableGraphical = true;
+  };
+
+  # mouse DPI settings
   services.ratbagd.enable = true;
 
   # configure docker

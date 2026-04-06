@@ -5,10 +5,11 @@
 {
   # Create group for games
   users.groups.games = {};
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.ladent = {
+  # Define a user account. Don’t forget to set a password with ‘passwd’.
+  users.users.vaughancodes = {
     isNormalUser = true;
-    description = "Lucas";
+    description = "Daniel";
+    shell = pkgs.zsh;
     extraGroups = [ "networkmanager" "wheel" "games"];
     packages = with pkgs; [
       kdePackages.kate
@@ -16,9 +17,19 @@
     ];
   };
 
+  # Zsh + Oh My Zsh
+  programs.zsh = {
+    enable = true;
+    ohMyZsh = {
+      enable = true;
+      plugins = [ "git" "docker" "kubectl" "direnv" ];
+      theme = "robbyrussell";
+    };
+  };
+
   nix.settings.trusted-users = [
     "root"
-    "ladent"
+    "vaughancodes"
     "@wheel"
   ];
   
@@ -32,9 +43,9 @@
     NV_PRIME_RENDER_OFFLOAD_PROVIDER= "NVIDIA-G0";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     CLUTTER_DEFAULT_FPS = 165;
-    __GL_SYNC_DISPLAY_DEVICE = "HDMI-0";
+    __GL_SYNC_DISPLAY_DEVICE = "DP-0";
     NH_OS_FLAKE = "/etc/nixos";
-    KUBECONFIG = "/home/ladent/.kube_configs/home_cluster.yaml";
+    # KUBECONFIG = "/home/vaughancodes/.kube_configs/home_cluster.yaml";
     SDL_JOYSTICK_HIDAPI = "0";
     QT_QPA_PLATFORM = "wayland";
     GDK_BACKEND = "wayland";

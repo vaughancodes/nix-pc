@@ -19,7 +19,7 @@
   nh
   nixfmt 
   kdePackages.partitionmanager
-  mullvad-vpn
+  # mullvad-vpn
   awscli2
   vlc
   libreoffice-qt6-fresh
