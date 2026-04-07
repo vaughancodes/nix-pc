@@ -1,5 +1,5 @@
 # Configuration for generic system stuff
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 
 {

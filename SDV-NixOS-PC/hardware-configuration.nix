@@ -10,13 +10,25 @@
 
   boot.initrd.availableKernelModules = [ "vmd" "xhci_pci" "ahci" "nvme" "usbhid" "uas" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = with config.boot.kernelPackages; [
+  boot.kernelModules = [ "kvm-intel" "hid-logitech-hidpp" ];
+  boot.extraModulePackages = (with config.boot.kernelPackages; [
     v4l2loopback
+  ]) ++ [
+    (pkgs.callPackage ./modules/hid-logitech-g-pro.nix {
+      kernel = config.boot.kernelPackages.kernel;
+    })
   ];
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
+
+
+  # Allow users in the 'games' group to adjust wheel FF settings via sysfs
+  services.udev.extraRules = ''
+    SUBSYSTEM=="hid", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c272", \
+      RUN+="${pkgs.coreutils}/bin/chmod 0666 /sys%p/range /sys%p/spring_level /sys%p/damper_level /sys%p/friction_level"
+  '';
+
   security.polkit.enable = true;
 
   fileSystems."/" =
