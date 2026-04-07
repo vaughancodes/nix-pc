@@ -10,9 +10,9 @@
 
     nixosConfigurations = {
 
-      # Setup Lucas' PC
-      LD-NixOS-PC = let 
-        hostName = "LD-NixOS-PC";
+      # Setup Daniel's PC
+      SDV-NixOS-PC = let
+        hostName = "SDV-NixOS-PC";
         specialArgs = {
           inherit hostName;
           };
