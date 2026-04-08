@@ -1,6 +1,9 @@
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
+let
+  sddm-reactionary = import ../derivations/sddm-reactionary.nix { inherit pkgs; };
+in
 {
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
@@ -9,8 +12,20 @@
 
 
   # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    theme = "reactionary";
+    extraPackages = with pkgs.kdePackages; [
+      qtsvg
+      qtvirtualkeyboard
+    ];
+    settings.Theme = {
+      CursorTheme = "retrosmart-xcursor-white-color";
+      CursorSize = 36;
+    };
+  };
   services.desktopManager.plasma6.enable = true;
+  environment.systemPackages = [ sddm-reactionary ];
 
   # Configure keymap in X11
   services.xserver.xkb = {
