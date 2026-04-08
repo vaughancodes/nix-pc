@@ -1,31 +1,7 @@
 { pkgs }:
 
 let
-  # Fixed-output derivation that fetches from the KDE Store OCS API at build time,
-  # getting a fresh JWT download URL each build.
-  fetchFromKdeStore = { contentId, name, hash }:
-    pkgs.stdenv.mkDerivation {
-      inherit name;
-      outputHash = hash;
-      outputHashMode = "recursive";
-      outputHashAlgo = "sha256";
-
-      nativeBuildInputs = with pkgs; [ curl cacert gnutar xz bzip2 ];
-
-      phases = [ "installPhase" ];
-
-      installPhase = ''
-        # Query the KDE Store API for a fresh download URL
-        downloadUrl=$(curl -sL "https://api.kde-look.org/ocs/v1/content/data/${toString contentId}" \
-          | sed -n 's|.*<downloadlink1>\(.*\)</downloadlink1>.*|\1|p' \
-          | sed 's/&amp;/\&/g')
-
-        # Download and extract
-        curl -L "$downloadUrl" -o archive
-        mkdir -p $out
-        tar xf archive -C $out
-      '';
-    };
+  fetchFromKdeStore = import ./lib/fetchFromKdeStore.nix { inherit pkgs; };
 
   se98c-icons = fetchFromKdeStore {
     contentId = 1581320;
@@ -41,7 +17,7 @@ let
 in
 pkgs.stdenv.mkDerivation {
   pname = "sddm-reactionary";
-  version = "3.0.11";
+  version = "3.0.14";
   src = pkgs.fetchgit {
     url = "https://www.opencode.net/phob1an/reactionary.git";
     rev = "d02946110b87c9c61607ff4913dcbf9d070f6b6a";
@@ -87,9 +63,9 @@ pkgs.stdenv.mkDerivation {
       $out/share/sddm/themes/reactionary/assets/promptbox.svg
 
     # Install MS Sans Serif and VMWare Terminal Font
-    cp ${../derivations/ms-sans-serif.ttf} \
+    cp ${../derivations/fonts/ms-sans-serif.ttf} \
       $out/share/sddm/themes/reactionary/assets/ms-sans-serif.ttf
-    cp ${../derivations/vmware-terminal.ttf} \
+    cp ${../derivations/fonts/vmware-terminal.ttf} \
       $out/share/sddm/themes/reactionary/assets/vmware-terminal.ttf
 
     # Replace font loaders to use MS Sans Serif

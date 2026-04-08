@@ -3,6 +3,7 @@
 
 let
   sddm-reactionary = import ../derivations/sddm-reactionary.nix { inherit pkgs; };
+  win98-desktop-theme = import ../derivations/win98-desktop-theme.nix { inherit pkgs; };
 in
 {
   # Enable the X11 windowing system.
@@ -25,7 +26,7 @@ in
     };
   };
   services.desktopManager.plasma6.enable = true;
-  environment.systemPackages = [ sddm-reactionary ];
+  environment.systemPackages = [ sddm-reactionary win98-desktop-theme ];
 
   # Configure keymap in X11
   services.xserver.xkb = {
