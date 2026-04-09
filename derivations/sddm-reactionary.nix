@@ -17,7 +17,7 @@ let
 in
 pkgs.stdenv.mkDerivation {
   pname = "sddm-reactionary";
-  version = "3.0.14";
+  version = "3.0.16";
   src = pkgs.fetchgit {
     url = "https://www.opencode.net/phob1an/reactionary.git";
     rev = "d02946110b87c9c61607ff4913dcbf9d070f6b6a";
@@ -65,6 +65,8 @@ pkgs.stdenv.mkDerivation {
     # Install MS Sans Serif and VMWare Terminal Font
     cp ${../derivations/fonts/ms-sans-serif.ttf} \
       $out/share/sddm/themes/reactionary/assets/ms-sans-serif.ttf
+    cp ${../derivations/fonts/ms-sans-serif-bold.ttf} \
+      $out/share/sddm/themes/reactionary/assets/ms-sans-serif-bold.ttf
     cp ${../derivations/fonts/vmware-terminal.ttf} \
       $out/share/sddm/themes/reactionary/assets/vmware-terminal.ttf
 

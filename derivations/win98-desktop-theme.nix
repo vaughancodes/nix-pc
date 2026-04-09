@@ -59,6 +59,12 @@ pkgs.stdenv.mkDerivation {
     mkdir -p $out/share/plasma/look-and-feel
     cp -r ${reactionary-src}/PLUS/look-and-feel/org.magpie.reactplus.desktop \
       $out/share/plasma/look-and-feel/
+    chmod -R u+w $out/share/plasma/look-and-feel/org.magpie.reactplus.desktop
+
+    # Replace the stock Application Launcher (kickoff) with our custom Win98
+    # Start Button, and bind the Meta key to toggle it.
+    sed -i 's|var kOff = panel.addWidget("org.kde.plasma.kickoff")|var winStart = panel.addWidget("org.win98.startbutton"); winStart.currentConfigGroup = ["Shortcuts"]; winStart.writeConfig("global", "Meta")|' \
+      $out/share/plasma/look-and-feel/org.magpie.reactplus.desktop/contents/layouts/org.kde.plasma.desktop-layout.js
 
     # Reactionary Plus desktop/plasma theme
     mkdir -p $out/share/plasma/desktoptheme
@@ -68,10 +74,15 @@ pkgs.stdenv.mkDerivation {
     # Fonts
     mkdir -p $out/share/fonts/truetype
     cp ${./fonts/ms-sans-serif.ttf} $out/share/fonts/truetype/ms-sans-serif.ttf
+    cp ${./fonts/ms-sans-serif-bold.ttf} $out/share/fonts/truetype/ms-sans-serif-bold.ttf
     cp ${./fonts/vmware-terminal.ttf} $out/share/fonts/truetype/vmware-terminal.ttf
 
     # Windows 9x sound theme
     mkdir -p $out/share/sounds
     cp -r ${./sounds/windows-9x} $out/share/sounds/windows-9x
+
+    # Win98 Start Button plasmoid
+    mkdir -p $out/share/plasma/plasmoids
+    cp -r ${./win98-start-button} $out/share/plasma/plasmoids/org.win98.startbutton
   '';
 }

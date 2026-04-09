@@ -50,6 +50,11 @@
     #media-session.enable = true;
   };
 
+  # Enable the Gnome Keyring service
+  services.gnome.gnome-keyring.enable = true;
+
+  # Unlock the keyring automatically on login
+  security.pam.services.sddm.enableGnomeKeyring = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

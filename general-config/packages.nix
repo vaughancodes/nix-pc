@@ -35,6 +35,9 @@
   ffmpeg
   lshw
   usbutils
+  protonmail-bridge
+  space-cadet-pinball
+  easyeffects
   ];
   
   # nh cleaning enabling
